@@ -1,0 +1,27 @@
+{{- /*
+  Examples are stored as plain text: a new line is a new line. Markdown would
+  join the lines of a paragraph, so a hard break ("\" at the line end) is added
+  between two ordinary lines. A line that starts a block of its own (a list
+  item, the bulbed note, which renders a <div>, or block HTML) is left alone,
+  and a blank line still starts a new paragraph. The bulb note is inline, so
+  it is an ordinary line.
+*/ -}}
+{{- $list := `(?i)^\s*(([-*+]|\d+[.)])\s|\{\{[<%]\s*/?\s*bulbed\b|</?(div|p|table|ul|ol|li|blockquote|h[1-6]|pre|hr|section|figure|details)\b)` -}}
+{{- $paragraphs := slice -}}
+{{- range split . "\n\n" -}}
+  {{- $lines := split . "\n" -}}
+  {{- $last := sub (len $lines) 1 -}}
+  {{- $para := "" -}}
+  {{- range $i, $line := $lines -}}
+    {{- $para = print $para $line -}}
+    {{- if lt $i $last -}}
+      {{- $next := index $lines (add $i 1) -}}
+      {{- if not (or (findRE $list $line 1) (findRE $list $next 1)) -}}
+        {{- $para = print $para `\` -}}
+      {{- end -}}
+      {{- $para = print $para "\n" -}}
+    {{- end -}}
+  {{- end -}}
+  {{- $paragraphs = $paragraphs | append $para -}}
+{{- end -}}
+{{- return delimit $paragraphs "\n\n" -}}

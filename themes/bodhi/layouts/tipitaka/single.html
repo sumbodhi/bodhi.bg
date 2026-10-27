@@ -1,0 +1,31 @@
+{{ define "main" }}
+
+<div class="site-nav">
+    <a class="black-link circle" href="/"><i class="icofont-home"></i></a>
+    <i class="icofont-rounded-right"></i>
+    <a class="generic-link black" href="/tipitaka/">Типитака</a>
+    <i class="icofont-rounded-right"></i>
+
+    {{ if .Params.nav }}
+    {{ $navs := (.Params.nav) }}
+    {{ $len := (len $navs) }}
+    {{ range $index, $nav := $navs }}
+        <a class="generic-link black" href="/tipitaka/{{ $nav }}/">{{ $nav }}</a>
+        {{if ne (add $index 1) $len}}<i class="icofont-rounded-right"></i>{{end}}
+    {{ end }}
+
+    <i class="icofont-rounded-right"></i>
+    {{ end }}
+
+
+     {{ strings.FirstUpper .Title }}
+</div>
+
+{{ .Content }}
+
+<!--<div class="word-entry-infos">-->
+<!--    последна редакция {{ time.Format "2 January 2006" .Lastmod }}-->
+<!--</div>-->
+
+
+{{ end }}

@@ -1,0 +1,18 @@
+{{ define "main" }}
+
+<div class="site-nav">
+    <a class="black-link circle" href="/"><i class="icofont-home"></i></a>
+    <i class="icofont-rounded-right"></i>
+    <a class="generic-link black" href="/statii/">Статии</a>
+    <i class="icofont-rounded-right"></i>
+    <a class="generic-link black" href="{{ .RelPermalink }}">{{ .Title }}</a>
+</div>
+
+{{ if .Title }}
+<h1 class="single-title">{{ .Title }}</h1>
+{{ end }}
+<div class="single-page">{{ partial "metadata.html" . }}</div>
+<br>
+{{ .Content }}
+
+{{ end }}

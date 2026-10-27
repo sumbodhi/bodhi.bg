@@ -1,0 +1,25 @@
+<table class="word-example">
+    <tr>
+        <td>
+            <i class="icofont-book-alt"></i>
+        </td>
+        <td>
+            {{ if .Get 2}}
+            <div class="audio-player btn-push orange margin-top--4 margin-left--0 margin-bottom--5" data-audio="{{ .Get 2 }}">
+                <i class="icofont-ui-play"></i>
+
+                <div class="playing">
+                    <span class="playing-bar playing-bar-1"></span>
+                    <span class="playing-bar playing-bar-2"></span>
+                    <span class="playing-bar playing-bar-3"></span>
+                    <span class="playing-bar playing-bar-4"></span>
+                </div>
+            </div>
+            {{ end }}
+            <p class="example pali">
+                {{ .Get 0 | .Page.RenderString }}
+            </p>
+            <p class="example bg">{{ .Get 1 | .Page.RenderString }}</p>
+        </td>
+    </tr>
+</table>

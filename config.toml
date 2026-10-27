@@ -1,0 +1,38 @@
+baseURL = 'https://bodhi.bg/'
+languageCode = 'bg'
+defaultContentLanguage = "bg"
+defaultContentLang = "bg"
+title = 'Бодхи БГ'
+theme = 'bodhi'
+
+timeZone = "Europe/Sofia"
+
+[markup.goldmark.renderer]
+    unsafe = true # Allow HTML in md files
+
+dateFormat = "2 January 2006"
+[menu]
+    [[menu.main]]
+        name = "Начало"
+        url = "/"
+        weight = 1
+    [[menu.main]]
+        name = "Типитака"
+        url = "/tipitaka/"
+        weight = 2
+    [[menu.main]]
+        name = "Статии"
+        url = "/statii/"
+        weight = 3
+    [[menu.main]]
+        name = "Пали"
+        url = "/pali/"
+        weight = 4
+    [[menu.main]]
+        name = "За сайта"
+        url = "/za-bodhi-bg/"
+        weight = 5
+
+# Dictionary pages come from data/rechnik.json through content/rechnik/_content.gotmpl.
+[permalinks.page]
+    rechnik = "/rechnik/:contentbasename/"

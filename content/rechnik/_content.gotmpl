@@ -1,0 +1,63 @@
+{{/*
+  One dictionary page per headword, built from data/rechnik.json
+  (exported from the editor's database).
+
+  The page body is put together from the same shortcodes the hand-written
+  entries used, so cross references ({{< ref >}}) and notes keep working.
+  Text fields are already Markdown and go in as they are.
+*/}}
+{{ range site.Data.rechnik.words }}
+  {{ $word := .word }}
+
+  {{ $md := "" }}
+  {{ range .forms }}
+    {{/* a player only for a recording that is really there */}}
+    {{ $audio := "" }}
+    {{ with .audio }}{{ if os.FileExists (printf "static/audio/%s" .) }}{{ $audio = . }}{{ end }}{{ end }}
+    {{ $md = printf "%s{{< word word=%q grammar=%q breakup=%q audio=%q >}}\n\n%s\n\n" $md $word .grammar .breakup $audio .meaning }}
+  {{ end }}
+
+  {{ with .expressions }}
+    {{ $md = print $md "\n## Словосъчетания {.extra-info-heading}\n\n" }}
+    {{ range . }}
+      {{ if .notes }}
+        {{ $md = printf "%s{{%% complexcombo %q %q %%}}\n%s\n{{%% /complexcombo %%}}\n\n" $md .pali .bg .notes }}
+      {{ else }}
+        {{ $md = printf "%s{{< wordcombo %q %q >}}\n\n" $md .pali .bg }}
+      {{ end }}
+    {{ end }}
+  {{ end }}
+
+  {{ with .examples }}
+    {{ $md = print $md "\n## Примери {.examples-heading}\n\n" }}
+    {{ range . }}
+      {{/* Stored as plain lines; the partial adds the Markdown line breaks. */}}
+      {{ $pali := partial "rechnik/lines.html" .pali }}
+      {{ $bg := partial "rechnik/lines.html" .bg }}
+      {{ if .audio }}
+        {{ $md = printf "%s{{< example %q %q %q >}}\n\n" $md $pali $bg .audio }}
+      {{ else }}
+        {{ $md = printf "%s{{%% wordexample %%}}\n\n%s\n\n%s\n\n{{%% /wordexample %%}}\n\n" $md $pali $bg }}
+      {{ end }}
+    {{ end }}
+  {{ end }}
+
+  {{ with .grammar }}
+    {{ $md = printf "%s\n## Граматика {.extra-info-heading}\n%s\n" $md . }}
+  {{ end }}
+
+  {{ with .notes }}
+    {{ $md = printf "%s\n## Бележки {.extra-info-heading}\n\n%s\n" $md . }}
+  {{ end }}
+
+  {{ $.AddPage (dict
+    "path" (printf "%s/%s" (substr $word 0 1) $word)
+    "title" (strings.FirstUpper $word)
+    "dates" (dict "date" (time.AsTime .created) "lastmod" (time.AsTime .updated))
+    "description" (printf "Значението на думата %s от пали на български" $word)
+    "keywords" (slice $word "значение" "речник" "пали")
+    "aliases" .aliases
+    "params" (dict "see" .see)
+    "content" (dict "mediaType" "text/markdown" "value" $md)
+  ) }}
+{{ end }}

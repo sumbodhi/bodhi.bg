@@ -1,0 +1,15 @@
+{{ define "main" }}
+
+{{ if .Title }}
+<h1 class="single-title">{{ .Title }}</h1>
+{{ end }}
+{{ if .IsHome }}
+    asdf
+{{ else }}
+    <div class="single-page">{{ partial "metadata.html" . }}</div>
+    <br>
+{{ end }}
+
+{{ .Content }}
+
+{{ end }}

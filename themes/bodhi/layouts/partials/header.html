@@ -1,0 +1,18 @@
+<header>
+    <div class="logo">
+        <a href="/">
+            <img src="/img/bodhi-leaf.png?v=5" height="22" width="22" alt="bodhi"/>
+            <span class="title sofia">Бодхи</span>
+        </a>
+        <span class="filler"></span>
+        <i class="icofont-navigation-menu icofont-2x mobile" id="mobile-menu"></i>
+    </div>
+    <nav id="navigation">
+        {{ range .Site.Menus.main }}
+        <a class="nav-link" href="{{ .URL }}">
+            {{ $text := print .Name | safeHTML }}
+            {{ $text }}
+        </a>
+        {{ end }}
+    </nav>
+</header>

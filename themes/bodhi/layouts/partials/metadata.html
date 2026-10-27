@@ -1,0 +1,16 @@
+<div class="publish-date"><i class="icofont-calendar icofont-1x"></i>{{ time.Format "2 January 2006" .PublishDate  }}
+
+    {{ if .Lastmod }}
+    {{ $lastmod := time.Format "2 January 2006" .Lastmod }}
+    {{ $date := time.Format "2 January 2006" .PublishDate }}
+    {{ if and (ne $lastmod $date) (gt .Lastmod .) }}
+    <br/><small>последна редакция {{ time.Format "2 January 2006" .Lastmod }}</small>
+    {{ end }}
+    {{ end }}
+</div>
+{{ with .Params.tags }}
+{{ range . }}
+{{ $href := print (absURL "tags/") (urlize .) }}
+<a class="btn btn-sm btn-outline-dark tag-btn" href="{{ $href }}">{{ . }}</a>
+{{ end }}
+{{ end }}

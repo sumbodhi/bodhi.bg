@@ -1,0 +1,61 @@
+{{ if .IsNamedParams }}
+<div class="word">
+    <h2 class="word-heading {{ if .Get "audio"}} flex align-items-center {{ end }}">{{ .Get "word" }}
+        {{ if .Get "audio" }}
+            <div class="audio-player btn-push orange" data-audio="{{ .Get "audio" }}">
+                <i class="icofont-ui-play"></i>
+
+                <div class="playing">
+                    <span class="playing-bar playing-bar-1"></span>
+                    <span class="playing-bar playing-bar-2"></span>
+                    <span class="playing-bar playing-bar-3"></span>
+                    <span class="playing-bar playing-bar-4"></span>
+                </div>
+            </div>
+        {{ end }}
+    </h2>
+
+    {{ if .Get "breakup"}}
+    <div class="breakup">{{ .Get "breakup"}}</div>
+    {{ end }}
+    <div class="word-infos">{{ .Get "grammar"}}</div>
+
+
+    {{ if .Page.Params.See }}
+        <div class="see"><i>виж.</i>
+
+            {{ $len := (len .Page.Params.See ) }}
+        {{ range $index, $element := .Page.Params.See }}
+            <a target="_blank"
+               {{ if site.GetPage (printf "/rechnik/%s/%s" (substr . 0 1) .) }}
+                {{ (printf "href=/rechnik/%s" . )  | safeHTMLAttr }}
+                {{ else }}
+            class="does-not-exist"
+            {{end}}
+            >{{.}}</a>{{if ne (add $index 1) $len}}, {{end}}
+        {{ end }}
+    {{ end}}
+</div>
+{{ else }}
+<div class="word">
+    <h2 class="word-heading {{ if .Get 3}} flex align-items-center {{ end }}">{{ .Get 0 }}
+        {{ if .Get 3}}
+        <div class="audio-player btn-push orange" data-audio="{{ .Get 3 }}">
+            <i class="icofont-ui-play"></i>
+
+            <div class="playing">
+                <span class="playing-bar playing-bar-1"></span>
+                <span class="playing-bar playing-bar-2"></span>
+                <span class="playing-bar playing-bar-3"></span>
+                <span class="playing-bar playing-bar-4"></span>
+            </div>
+        </div>
+        {{ end }}
+    </h2>
+
+    <div class="word-infos">{{ .Get 1}}</div>
+    {{ if .Get 2}}
+    <div class="breakup">{{ .Get 2}}</div>
+    {{ end }}
+</div>
+{{ end }}

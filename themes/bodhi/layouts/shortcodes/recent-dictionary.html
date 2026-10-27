@@ -1,0 +1,10 @@
+<div>
+  <h3>Последно от речника</h3>
+  <ul>
+      {{ range first 5 (where .Site.RegularPages "Section" "rechnik") }}
+        <li>
+          <a href="{{ .Permalink }}">{{ .Title }}</a>
+        </li>
+      {{ end }}
+  </ul>
+</div>

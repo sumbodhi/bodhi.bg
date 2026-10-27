@@ -1,0 +1,43 @@
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,minimum-scale=1">
+
+    <meta name="description"
+          content="{{ with .Description }}{{ . }}{{ else }}Бодхи БГ е сайт посветен на Тхеравада будизма и на пътя за пробуждане и спиране на въртенето в самсара.{{end }}">
+
+    <meta name="keywords"
+          content="{{ with .Keywords }}{{ range $i, $e := . }}{{ if $i }}, {{ end }}{{ $e }}{{ end }}{{ else }}будизъм, дхамма, тхеравада, теравада, пали{{end }}">
+
+    {{ if .Params.image }}
+    <meta
+            property="og:image"
+            content="{{.Site.BaseURL}}images/{{ .Params.image }}"
+    />
+    {{ end }}
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link rel="shortcut icon" type="image/x-icon" href="/img/favicon.ico?v=5"/>
+    <link rel="icon" type="image/x-icon" href="/img/favicon.ico?v=5"/>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Alegreya:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500;1,600;1,700;1,800;1,900&family=Sofia+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+
+    {{ $scss := resources.Get "scss/style.scss" }}
+    {{ $opts := dict "transpiler" "libsass" "targetPath" "css/style.css" }}
+    {{ $style := $scss | toCSS $opts | resources.Minify | resources.Fingerprint }}
+    <link rel="stylesheet" href="{{ $style.Permalink }}" integrity="{{ $style.Data.Integrity }}">
+
+    {{ if .Params.MetaTitle }}
+        {{ $title := print .Params.MetaTitle " | " .Site.Title }}
+        <title>{{ $title }}</title>
+    {{ else }}
+        {{ $title := print .Title " | " .Site.Title }}
+        {{ if .IsHome }}{{ $title = .Site.Title }}{{ end }}
+        {{ if eq .Kind "404" }}{{ $title = print "Страницата не е открита | " .Site.Title }}{{ end }}
+        <title>{{ $title }}</title>
+    {{ end }}
+
+</head>

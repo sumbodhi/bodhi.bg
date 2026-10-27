@@ -1,0 +1,19 @@
+{{ define "main" }}
+
+<div class="site-nav">
+    <a class="black-link circle" href="/"><i class="icofont-home"></i></a>
+    <i class="icofont-rounded-right"></i>
+    <a class="generic-link bordered" href="/statii/">Статии</a>
+</div>
+
+<h1>{{ .Title }}</h1>
+<small>Статии за будизма.</small>
+{{ range .Pages.ByPublishDate.Reverse }}
+<p>
+<h3><a class="title" href="{{ .RelPermalink }}">{{ .Title }}</a></h3>
+{{ partial "metadata.html" . }}
+<div class="summary">{{ .Summary }}</div>
+</p>
+{{ end }}
+
+{{ end }}

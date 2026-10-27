@@ -1,0 +1,72 @@
+{{ define "main" }}
+
+<div class="site-nav">
+    <a class="black-link circle" href="/"><i class="icofont-home"></i></a>
+    <i class="icofont-rounded-right"></i>
+    <a class="generic-link black" href="/pali/">Пали</a>
+    <i class="icofont-rounded-right"></i>
+    <a class="generic-link bordered" href="/rechnik/">Речник</a>
+</div>
+
+<h1>{{ .Title }}</h1>
+{{ .Content }}
+
+<p>Общо думи в речника: <b>{{ len .Pages }}</b></p>
+
+{{ $todayCount := 0 }}
+{{ $today := dateFormat "Jan 2, 2006" now }}
+{{ range .Pages.GroupByDate "Jan 2, 2006" }}
+    {{ if eq .Key $today }}
+        {{ $todayCount = len .Pages }}
+    {{ end }}
+{{ end }}
+
+{{ $described := 0 }}
+
+<h3>Последно добавени</h3>
+{{ if eq (printf "%v" $.Site.BaseURL) "http://localhost:1313/" }}
+<h4>Днес {{$todayCount}}</h4>
+{{ end }}
+<ul>
+
+
+
+
+{{ range .Pages.ByPublishDate.Reverse }}
+<li>
+<!--    {{ if eq (printf "%v" $.Site.BaseURL) "http://localhost:1313/" }}-->
+<!--        {{ $name := lower .Title }}-->
+<!--        {{ $audio := print "static/audio/" $name ".mp3" }}-->
+<!--&lt;!&ndash;    {{ $audio }}&ndash;&gt;-->
+<!--        {{ if (os.FileExists $audio) }}-->
+<!--        <div class="audio-player btn-push orange" data-audio="{{ $name }}.mp3">-->
+<!--            <i class="icofont-ui-play"></i>-->
+
+<!--            <div class="playing">-->
+<!--                <span class="playing-bar playing-bar-1"></span>-->
+<!--                <span class="playing-bar playing-bar-2"></span>-->
+<!--                <span class="playing-bar playing-bar-3"></span>-->
+<!--                <span class="playing-bar playing-bar-4"></span>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--        {{ end }}-->
+<!--    {{ end }}-->
+
+
+    {{ if eq (printf "%v" $.Site.BaseURL) "http://localhost:1313/" }}
+        {{ if and (eq now.Year .Lastmod.Year) (lt (sub now.YearDay .Lastmod.YearDay) 1) }}
+            <span class="today">{{ sub $todayCount $described }}</span>
+            <a class="title" href="{{ .RelPermalink }}">{{ lower .Title }}</a>
+            {{ $described = add $described 1}}
+        {{ else }}
+            <a class="title" href="{{ .RelPermalink }}">{{ lower .Title }}</a>
+        {{ end }}
+
+    {{ else }}
+    <a class="title" href="{{ .RelPermalink }}">{{ lower .Title }}</a>
+    {{ end }}
+</li>
+{{ end }}
+</ul>
+
+{{ end }}
