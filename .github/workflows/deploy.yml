@@ -1,0 +1,55 @@
+# Builds the site with Hugo and deploys it to the Cloudflare Pages project
+# "bodhi" (bodhi.bg, www.bodhi.bg). Runs on every push to main, and can be run
+# by hand from the Actions tab.
+#
+# Pages uploads only the files that changed since the last deployment and
+# refreshes its own cache, so there is no separate purge step.
+#
+# Needs two repository secrets (Settings → Secrets and variables → Actions):
+#   CLOUDFLARE_API_TOKEN   an API token with Account › Cloudflare Pages › Edit
+#   CLOUDFLARE_ACCOUNT_ID  the Cloudflare account the project belongs to
+
+name: deploy
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# One deployment at a time; a newer push waits for the running one to finish.
+concurrency:
+  group: deploy
+  cancel-in-progress: false
+
+env:
+  HUGO_VERSION: 0.147.9
+  WRANGLER_VERSION: 4.152.0
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Hugo
+        run: |
+          curl -sSfL -o "$RUNNER_TEMP/hugo.deb" \
+            "https://github.com/gohugoio/hugo/releases/download/v${HUGO_VERSION}/hugo_extended_${HUGO_VERSION}_linux-amd64.deb"
+          sudo dpkg -i "$RUNNER_TEMP/hugo.deb"
+          hugo version
+
+      # A clean public/ every time, so a page that was removed (a word turned
+      # into a draft) doesn't stay on the site.
+      - name: Build
+        run: hugo --cleanDestinationDir
+
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          wranglerVersion: ${{ env.WRANGLER_VERSION }}
+          command: pages deploy public --project-name=bodhi --branch=main
